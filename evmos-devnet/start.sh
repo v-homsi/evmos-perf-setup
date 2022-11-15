@@ -25,10 +25,12 @@ echo "prepare genesis: Run validate-genesis to ensure everything worked and that
 
 sed -i 's/prometheus = false/prometheus = true/g' $DATA_DIR/config/config.toml
 
+echo "running evmos with extra flags $EXTRA_FLAGS"
+
 echo "starting evmos node $i in background ..."
 ./evmosd start --pruning=nothing --rpc.unsafe \
 --keyring-backend test --home $DATA_DIR \
->$DATA_DIR/node.log --metrics 2>&1 & disown
+>$DATA_DIR/node.log $EXTRA_FLAGS  &>> /opt/evmosd.log & disown
 
 echo "started evmos node"
 tail -f /dev/null

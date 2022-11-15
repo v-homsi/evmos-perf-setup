@@ -17,6 +17,8 @@ RUN make build
 
 FROM golang:1.19-bullseye as final
 
+ARG extra_flags=""
+
 WORKDIR /
 
 RUN apt-get update
@@ -25,5 +27,7 @@ RUN apt-get update
 COPY --from=build-env /go/src/github.com/evmos/evmos/build/evmosd /
 
 COPY ./start.sh ./start.sh
+
+ENV EXTRA_FLAGS=${extra_flags}
 
 ENTRYPOINT [ "./start.sh" ]

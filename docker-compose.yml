@@ -10,10 +10,11 @@ services:
     build:
       context: ./evmos-devnet
       args:
-        - commit_hash=31fd2a830a0d1812b2c54a323dc85d1a7ec5092e
+        - commit_hash=80c38f659a65a983b221e2a568c6172b8ac3bffc
     restart: always
     ports:
       - 8545:8545
+      - 26660:26660
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:26657/status" ]
       interval: 30s
@@ -25,9 +26,11 @@ services:
     build:
       context: ./evmos-devnet
       args:
-        - commit_hash=343ff54bb593299032d903feb6416e23d024eb48
+        - commit_hash=e0ed40f26123e31f753815de47eec9a866498a6e
+        - extra_flags=--metrics
     restart: always
     ports:
+      - 26661:26660
       - 8645:8545
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:26657/status" ]
@@ -64,8 +67,6 @@ services:
 
   tx-bot1:
     image: vhomsi/tx-bot
-    ports:
-      - 8081:8080
     depends_on:
       - evmos-devnet1
     environment:
@@ -75,8 +76,6 @@ services:
 
   tx-bot2:
     image: vhomsi/tx-bot
-    ports:
-      - 8082:8080
     depends_on:
       - evmos-devnet2
     environment:
@@ -87,8 +86,6 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.45.0
     container_name: cadvisor
-    ports:
-      - 8090:8080
     volumes:
       - /:/rootfs:ro
       - /var/run/docker.sock:/var/run/docker.sock:rw
